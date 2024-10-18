@@ -1,5 +1,4 @@
-       START BLOG AREA
-================================= -->
+  
 <section class="blog-area section--padding bg-gray overflow-hidden">
     <div class="container">
         <div class="section-heading text-center">
@@ -185,8 +184,3 @@
         </div><!-- end blog-post-carousel -->
     </div><!-- end container -->
 </section><!-- end blog-area -->
-<!-- ================================
-       START BLOG AREA
-================================= -->
-
-<!--======================================

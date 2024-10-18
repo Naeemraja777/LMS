@@ -30,18 +30,13 @@
 @include('frontend.home.client-area')
 @include('frontend.home.blog-area')
 
-        START GET STARTED AREA
-======================================-->
+
 @include('frontend.home.blog-area')
 
 
-<!--======================================
-        START SUBSCRIBER AREA
-======================================-->
+
 @include('frontend.home.subscribe-area')
-<!--======================================
-        END SUBSCRIBER AREA
-======================================-->
+
 
 @endsection
  

@@ -5,14 +5,14 @@
 <section class="breadcrumb-area section-padding img-bg-2">
 
     <div class="overlay"></div>
-8
+
     <div class="container">
-9
+
         <div class="breadcrumb-content d-flex flex-wrap align-items-center justify-content-between">
-10
+
             <div class="section-heading">
-11        <h2 class="section__title text-white">Checkout</h2>
-12	
+        <h2 class="section__title text-white">Checkout</h2>
+
             </div>
 
             <ul class="generic-list-item generic-list-item-white generic-list-item-arrow d-flex flex-wrap align-items-center">
@@ -29,15 +29,7 @@
 
     </div><!-- end container -->
 
-</section><!-- end breadcrumb-area -->
-
-
-
-    END BREADCRUMB AREA
-
-
-       START CONTACT AREA
-
+</section>
 <section class="cart-area section--padding">
 
     <div class="container">
@@ -143,22 +135,14 @@
                     <label for="bankTransfer">Stripe Payment</label>
 
                 </div>
-
             </div><!-- end payment-tab -->
-
         </div>
-
     </div><!-- end card-body -->
-
 </div><!-- end card -->
-
             </div><!-- end col-lg-7 -->
-
             <div class="col-lg-5">
-
                 <div class="card card-item">
-
-                    <div class="card-body">
+                 <div class="card-body">
 
                         <h3 class="card-title fs-22 pb-3">Order Details</h3>
 
@@ -166,45 +150,33 @@
 
                         <div class="order-details-lists">
 
-                            <div class="media media-card border-bottom border-bottom-gray pb-3 mb-3">
+                           @foreach ($carts as $item) 
 
-                                <a href="course-details.html" class="media-img">
+                                <div class="media media-card border-bottom border-bottom-gray pb-3 mb-3">
 
-                                    <img src="images/small-img.jpg" alt="Cart image">
 
-                                </a>
 
-                                <div class="media-body">
+                                      <a href="{{ url('course/details/'.$item->id.'/'.$item->options->slug) }}" class="media-img">
 
-                                    <h5 class="fs-15 pb-2"><a href="course-details.html">The Complete JavaScript Course 2021: From Zero to Expert!</a></h5>
+                                         <img src="{{ asset($item->options->image) }}" alt="Cart image">
 
-                                    <p class="text-black font-weight-semi-bold lh-18">$12.99 <span class="before-price fs-14">$129.99</span></p>
+                                     </a>
 
-                                </div>
+                                         <div class="media-body">
 
-                            </div><!-- end media -->
+                                            <h5 class="fs-15 pb-2"><a href="{{ url('course/details/'.$item->id.'/'.$item->options->slug) }}">{{ $item->name }} </a></h5>
 
-                            <div class="media media-card border-bottom border-bottom-gray pb-3 mb-3">
+                                            <p class="text-black font-weight-semi-bold lh-18">${{ $item->price }}  </p>
 
-                                <a href="course-details.html" class="media-img">
+                                        </div>
 
-                                    <img src="images/small-img.jpg" alt="Cart image">
+                                </div><!-- end media -->
 
-                                </a>
-
-                                <div class="media-body">
-
-                                    <h5 class="fs-15 pb-2"><a href="course-details.html">The Complete JavaScript Course 2021: From Zero to Expert!</a></h5>
-
-                                    <p class="text-black font-weight-semi-bold lh-18">$12.99 <span class="before-price fs-14">$129.99</span></p>
-
-                                </div>
-
-                            </div><!-- end media -->
+                            @endforeach  
 
                         </div><!-- end order-details-lists -->
 
-                        <a href="course-grid.html" class="btn-text"><i class="la la-edit mr-1"></i>Edit</a>
+                         <a href="{{ route('mycart') }}" class="btn-text"><i class="la la-edit mr-1"></i>Edit</a>
 
                     </div><!-- end card-body -->
 
@@ -218,33 +190,65 @@
 
                         <div class="divider"><span></span></div>
 
-                        <ul class="generic-list-item generic-list-item-flash fs-15">
+                                 @if (Session::has('coupon'))
 
-                            <li class="d-flex align-items-center justify-content-between font-weight-semi-bold">
 
-                                <span class="text-black">Original price:</span>
 
-                                <span>$199.99</span>
+                                    <ul class="generic-list-item generic-list-item-flash fs-15">
 
-                            </li>
+                                        <li class="d-flex align-items-center justify-content-between font-weight-semi-bold">
 
-                            <li class="d-flex align-items-center justify-content-between font-weight-semi-bold">
+                                            <span class="text-black">SubTotal:</span>
 
-                                <span class="text-black">Coupon discounts:</span>
+                                            <span>${{ $cartTotal }}</span>
 
-                                <span>-$181.99</span>
+                                        </li>
 
-                            </li>
+                                        <li class="d-flex align-items-center justify-content-between font-weight-semi-bold">
 
-                            <li class="d-flex align-items-center justify-content-between font-weight-bold">
+                                            <span class="text-black">Coupon Name:</span>
 
-                                <span class="text-black">Total:</span>
+                                            <span> {{ session()->get('coupon')['coupon_name'] }}
 
-                                <span>$18.99</span>
+                                            ( {{ session()->get('coupon')['coupon_discount'] }} %) </span>
 
-                            </li>
+                                        </li>
 
-                        </ul>
+                                                <li class="d-flex align-items-center justify-content-between font-weight-semi-bold">
+
+                                                    <span class="text-black">Coupon Dicount:</span>
+
+                                                    <span> ${{ session()->get('coupon')['discount_amount'] }}
+
+                                                    </span>
+
+                                                        </li>
+                                                <li class="d-flex align-items-center justify-content-between font-weight-bold">
+
+                                                            <span class="text-black">Total:</span>
+
+                                                            <span>${{ session()->get('coupon')['total_amount'] }}</span>
+
+                                                        </li>
+
+                                    </ul>
+
+           @else
+
+           <ul class="generic-list-item generic-list-item-flash fs-15">
+
+            <li class="d-flex align-items-center justify-content-between font-weight-bold">
+
+                <span class="text-black">Total:</span>
+
+                <span>${{ $cartTotal }}</span>
+
+            </li>
+
+        </ul>
+
+
+           @endif            
 
                         <div class="btn-box border-top border-top-gray pt-3">
 

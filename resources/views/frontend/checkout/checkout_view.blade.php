@@ -46,13 +46,16 @@
 
                         <div class="divider"><span></span></div>
 
-<form method="post" class="row">
 
-    <div class="input-box col-lg-6">
+      
+<form method="post" class="row" action="{{ route('payment') }}" enctype="multipart/form-data">
+            @csrf
 
-        <label class="label-text">First Name</label>
+            <div class="input-box col-lg-6">
 
-        <div class="form-group">
+            <label class="label-text">First Name</label>
+
+            <div class="form-group">
 
             <input class="form-control form--control" type="text" name="name" value="{{ Auth::user()->name }}">
 
@@ -102,7 +105,7 @@
 
     </div><!-- end input-box -->
 
-</form>
+
 
                     </div><!-- end card-body -->
 
@@ -151,6 +154,17 @@
                         <div class="order-details-lists">
 
                            @foreach ($carts as $item) 
+                              <input type="hidden" name="sulg[]" value="{{ $item->options->slug }}">
+
+
+
+                                <input type="hidden" name="course_id[]" value="{{ $item->id }}">
+                          
+                                <input type="hidden" name="course_title[]" value="{{ $item->name }}">
+                      
+                                <input type="hidden" name="price[]" value="{{ $item->price }}">
+                         
+                                <input type="hidden" name="instructor_id[]" value="{{ $item->options->instructor }}">
 
                                 <div class="media media-card border-bottom border-bottom-gray pb-3 mb-3">
 
@@ -230,8 +244,8 @@
                                                             <span>${{ session()->get('coupon')['total_amount'] }}</span>
 
                                                         </li>
-
                                     </ul>
+                                         <input type="hidden" name="total" value="{{ $cartTotal}}">
 
            @else
 
@@ -242,33 +256,30 @@
                 <span class="text-black">Total:</span>
 
                 <span>${{ $cartTotal }}</span>
-
             </li>
-
+             <input type="hidden" name="total" value="{{ $cartTotal}}">
         </ul>
-
-
            @endif            
-
                         <div class="btn-box border-top border-top-gray pt-3">
 
                             <p class="fs-14 lh-22 mb-2">Aduca is required by law to collect applicable transaction taxes for purchases made in certain tax jurisdictions.</p>
 
                             <p class="fs-14 lh-22 mb-3">By completing your purchase you agree to these <a href="#" class="text-color hover-underline">Terms of Service.</a></p>
 
-                            <a href="checkout.html" class="btn theme-btn w-100">Proceed <i class="la la-arrow-right icon ml-1"></i></a>
-
+                            <button type="submit" class="btn theme-btn w-100">Proceed <i class="la la-arrow-right icon ml-1"></i></button>
                         </div>
 
-                    </div><!-- end card-body -->
+                    </div>
 
-                </div><!-- end card -->
+                </div>
 
-            </div><!-- end col-lg-5 -->
+            </div>
 
-        </div><!-- end row -->
+        </div>
 
-    </div><!-- end container -->
+    </div>
+
+<form>
 
 </section>
 @endsection

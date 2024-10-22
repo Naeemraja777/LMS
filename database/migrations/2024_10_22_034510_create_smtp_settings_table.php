@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('smpt_settings', function (Blueprint $table) {
+        Schema::create('smtp_settings', function (Blueprint $table) {
             $table->id();
             $table->string('mailer')->nullable();
             $table->string('host')->nullable();
@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('username')->nullable();
             $table->string('password')->nullable();
             $table->string('encryption')->nullable();
-
             $table->string('from_address')->nullable(); 
 
             $table->timestamps();
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('smpt_settings');
+        Schema::dropIfExists('smtp_settings');
     }
 };

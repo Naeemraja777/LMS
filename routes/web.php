@@ -11,6 +11,8 @@ use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\WshLisController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Backend\CouponController;
+
+use App\Http\Controllers\Backend\SettingController;
 /*
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +96,16 @@ Route::controller(CouponController::class)->group(function(){
     Route::get('/admin/delete/coupon/{id}','AdminDeleteCoupon')->name('admin.delete.coupon'); 
 
 
+
+});
+// Category All Route 
+
+
+
+Route::controller(SettingController::class)->group(function(){
+
+    Route::get('/smtp/setting','SmtpSetting')->name('smtp.setting');
+    Route::post('/update/smtp','SmtpUpdate')->name('update.smtp');
 
 });
 });

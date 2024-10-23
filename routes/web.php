@@ -11,8 +11,8 @@ use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\WshLisController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Backend\CouponController;
-
 use App\Http\Controllers\Backend\SettingController;
+use App\Http\Controllers\Backend\OrderController;
 /*
 /*
 |--------------------------------------------------------------------------
@@ -108,7 +108,14 @@ Route::controller(SettingController::class)->group(function(){
     Route::post('/update/smtp','SmtpUpdate')->name('update.smtp');
 
 });
-});
+
+        Route::controller(OrderController::class)->group(function(){
+                Route::get('/admin/pending/order','AdminPendingOrder')->name('admin.pending.order');
+                Route::get('/admin/order/details/{id}','AdminOrderDetails')->name('admin.order.details'); 
+                Route::get('/pending-confrim/{id}','PendingToConfirm')->name('pending-confrim');
+                Route::get('/admin/confirm/order','AdminConfirmOrder')->name('admin.confirm.order');  
+            });
+        });
 //end Admin middleware
 Route::get('/admin/login', [AdminController::class, 'Adminlogin'])->name('admin.login');
 Route::get('/become/instructor', [AdminController::class, 'BecomeInstructor'])->name('become.instructor');

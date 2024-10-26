@@ -58,15 +58,9 @@
                             <th>Status</th> 
 
                             <th>Action</th>
-
                         </tr>
-
                     </thead>
-
                     <tbody>
-
-                       
-
                         @foreach ($payment as $key=> $item) 
 
                         <tr>
@@ -82,33 +76,17 @@
                             <td>{{ $item->payment_type }}</td>
 
                             <td> <span class="badge rounded-pill bg-success"> {{ $item->status }}</span></td>
-
                             <td>
-
        <a href="{{ route('admin.order.details',$item->id) }}" class="btn btn-info px-5">Details  </a>   
-
-                         
-
                             </td>
 
                         </tr>
-
                         @endforeach
-
-                         
-
                     </tbody>
-
-                     
-
                 </table>
 
             </div>
-
         </div>
-
     </div>
-
 </div>
-
 @endsection

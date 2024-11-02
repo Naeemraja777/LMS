@@ -16,6 +16,7 @@ use App\Models\Coupon;
 use Illuminate\Support\Facades\Session;
 use App\Models\Payment;
 use App\Models\Order;
+use App\Models\Question;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller
@@ -103,9 +104,12 @@ class OrderController extends Controller
                                                                     }// End Method
                                                                     public function CourseView($course_id){
                                                                                 $id = Auth::user()->id;
-                                                                                 $course = Order::where('course_id',$course_id)->where('user_id',$id)->first();
+                                                                                $course = Order::where('course_id',$course_id)->where('user_id',$id)->first();
                                                                                 $section = CourseSection::where('course_id',$course_id)->orderBy('id','asc')->get();
-                                                                                return view('frontend.mycourse.course_view',compact('course','section'));
+                                                                        
+                                                                                $allquestion = Question::latest()->get();
+                                        
+                                                                                return view('frontend.mycourse.course_view',compact('course','section','allquestion'));
                                                                     
                                                                             }// End Method 
 

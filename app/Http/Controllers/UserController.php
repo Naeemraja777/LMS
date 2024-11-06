@@ -12,12 +12,14 @@ class UserController extends Controller
     public function Index(){
         return view('frontend.index');
     } // End Method 
+
     public function UserProfile(){
 
         $id = Auth::user()->id;
         $profileData = User::find($id);
         return view('frontend.dashboard.edit_profile',compact('profileData')); 
     } // End Method 
+
     public function UserProfileUpdate(Request $request){
 
         $id = Auth::user()->id;
@@ -44,7 +46,8 @@ class UserController extends Controller
         );
         return redirect()->back()->with($notification);
 
-    }
+    }// End Method 
+
     public function UserLogout(Request $request) {
         Auth::guard('web')->logout();
 
@@ -52,11 +55,20 @@ class UserController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        $notification = array(
+            'message' => 'Logout Successfully',
+            'alert-type' => 'info'
+        );
+
+        return redirect('/login')->with($notification);
     } // End Method 
+
+
     public function UserChangePassword(){
         return view('frontend.dashboard.change_password');
-    }
+    }// End Method 
+
+
     public function UserPasswordUpdate(Request $request){
 
         /// Validation 
@@ -66,7 +78,7 @@ class UserController extends Controller
         ]);
 
         if (!Hash::check($request->old_password, auth::user()->password)) {
-
+            
             $notification = array(
                 'message' => 'Old Password Does not Match!',
                 'alert-type' => 'error'
@@ -86,5 +98,6 @@ class UserController extends Controller
         return back()->with($notification); 
 
     }// End Method
+
 
 }

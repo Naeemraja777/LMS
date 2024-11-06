@@ -9,22 +9,27 @@ use App\Models\Course;
 use Illuminate\Support\Facades\Hash;
 class AdminController extends Controller
 {
-    public function index(){
+    public function AdminDashboard(){
+
         return view('admin.index');
-    }
+
+    } // End Method 
     public function Adminlogin(){
         return view('admin.admin_login');
     }
-    public function logout(Request $request)
-    {
+    public function AdminLogout(Request $request) {
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
-        return redirect('/admin/login');
-    }
+        $notification = array(
+            'message' => 'Logout Successfully',
+            'alert-type' => 'info'
+        );
+        return redirect('/admin/login')->with($notification);
+    } // End Method 
     public function AdminProfile(){
 
         $id = Auth::user()->id;

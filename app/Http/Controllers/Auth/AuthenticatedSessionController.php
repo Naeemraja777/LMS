@@ -28,20 +28,24 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-        $url='';
-        if($request->user()->role=='admin'){
-            $url='admin/dashboard';
-        }
-        elseif($request->user()->role=='instructor'){
-            $url='instructor/dashboard';
-        }
-        elseif($request->user()->role=='user'){
-            $url='/dashboard';
+
+        $notification = array(
+            'message' => 'Login Successfully',
+            'alert-type' => 'success'
+        );
+ 
+        $url = '';
+        if ($request->user()->role === 'admin') {
+            $url = 'admin/dashboard';
+        } elseif ($request->user()->role === 'instructor') {
+            $url = 'instructor/dashboard';
+        } elseif ($request->user()->role === 'user') {
+            $url = '/dashboard';
         }
 
-        return redirect()->intended($url);
+        return redirect()->intended($url)->with($notification);
     }
-
+ 
     /**
      * Destroy an authenticated session.
      */

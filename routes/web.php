@@ -15,6 +15,7 @@ use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\OrderController;
 use App\Http\Controllers\Backend\QuestionController;
 use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Controllers\Backend\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -166,12 +167,20 @@ Route::controller(OrderController::class)->group(function(){
 
 
 
+// Admin Report All Route 
+Route::controller(ReportController::class)->group(function(){
+    Route::get('/report/view','ReportView')->name('report.view'); 
+    Route::post('/search/by/date','SearchByDate')->name('search.by.date');
+    Route::post('/search/by/month','SearchByMonth')->name('search.by.month');
+    Route::post('/search/by/year','SearchByYear')->name('search.by.year');
+    
+});
+
 
 
 
 
 }); // End Admin Group Middleware 
-
 
 
 Route::get('/admin/login', [AdminController::class, 'AdminLogin'])->name('admin.login')->middleware(RedirectIfAuthenticated::class);
@@ -245,14 +254,22 @@ Route::controller(QuestionController::class)->group(function(){
   
 });
 
-
+// Instructor Coupon All Route 
+Route::controller(CouponController::class)->group(function(){
+    Route::get('/instructor/all/coupon','InstructorAllCoupon')->name('instructor.all.coupon');
+    Route::get('/instructor/add/coupon','InstructorAddCoupon')->name('instructor.add.coupon');
+    Route::post('/instructor/store/coupon','InstructorStoreCoupon')->name('instructor.store.coupon');
+    Route::get('/instructor/edit/coupon/{id}','InstructorEditCoupon')->name('instructor.edit.coupon');
+    Route::post('/instructor/update/coupon','InstructorUpdateCoupon')->name('instructor.update.coupon');
+    Route::get('/instructor/delete/coupon/{id}','InstructorDeleteCoupon')->name('instructor.delete.coupon');
+    
+});
 
 
 }); // End Instructor Group Middleware 
 
 
 ///// Route Accessable for All 
-
 Route::get('/instructor/login', [InstructorController::class, 'InstructorLogin'])->name('instructor.login')->middleware(RedirectIfAuthenticated::class);
 
 Route::get('/course/details/{id}/{slug}', [IndexController::class, 'CourseDetails']);
@@ -295,3 +312,4 @@ Route::post('/stripe_order', [CartController::class, 'StripeOrder'])->name('stri
 
 
 ///// End Route Accessable for All 
+

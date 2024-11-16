@@ -15,8 +15,10 @@ use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\OrderController;
 use App\Http\Controllers\Backend\QuestionController;
 use App\Http\Middleware\RedirectIfAuthenticated;
-use App\Http\Controllers\Backend\ReportController;
 
+use App\Http\Controllers\Backend\ReviewController;
+
+use App\Http\Controllers\Backend\ActiveUserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -168,17 +170,19 @@ Route::controller(OrderController::class)->group(function(){
 
 
 // Admin Report All Route 
-Route::controller(ReportController::class)->group(function(){
-    Route::get('/report/view','ReportView')->name('report.view'); 
-    Route::post('/search/by/date','SearchByDate')->name('search.by.date');
-    Route::post('/search/by/month','SearchByMonth')->name('search.by.month');
-    Route::post('/search/by/year','SearchByYear')->name('search.by.year');
+
+
+Route::controller(ReviewController::class)->group(function(){
+    Route::get('/admin/pending/review','AdminPendingReview')->name('admin.pending.review');  
+    Route::post('/update/review/stauts','UpdateReviewStatus')->name('update.review.stauts'); 
+    Route::get('/admin/active/review','AdminActiveReview')->name('admin.active.review');
+
+});
+// Admin All user and Instructor All Route 
+Route::controller(ActiveUserController::class)->group(function(){
+    Route::get('/all/user','AllUser')->name('all.user');  
     
 });
-
-
-
-
 
 }); // End Admin Group Middleware 
 
@@ -309,6 +313,7 @@ Route::get('/checkout', [CartController::class, 'CheckoutCreate'])->name('checko
 
 Route::post('/payment', [CartController::class, 'Payment'])->name('payment');
 Route::post('/stripe_order', [CartController::class, 'StripeOrder'])->name('stripe_order');
+Route::post('/store/review', [ReviewController::class, 'StoreReview'])->name('store.review');
 
 
 

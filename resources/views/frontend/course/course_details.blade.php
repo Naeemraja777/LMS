@@ -1,5 +1,7 @@
 @extends('frontend.master')
 @section('home')
+
+
 <!-- ================================
     START BREADCRUMB AREA
 ================================= -->
@@ -10,36 +12,81 @@
                 <ul class="generic-list-item generic-list-item-arrow d-flex flex-wrap align-items-center">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="#">{{ $course['category']['category_name'] }}</a></li>
-                    <li><a href="#">{{ $course['subcategory']['subcategory_name'] }}
+                    <li><a href="#">{{ $course['subcategory']['subcategory_name'] }}</a></li>
                 </ul>
                 <div class="section-heading">
-                 <h2 class="section__title">{{ $course->course_name }}</h2>
-                 <p class="section__desc pt-2 lh-30">{{ $course->course_title }}  
+                    <h2 class="section__title">{{ $course->course_name }}</h2>
+                    <p class="section__desc pt-2 lh-30">{{ $course->course_title }}</p>
                 </div><!-- end section-heading -->
                 <div class="d-flex flex-wrap align-items-center pt-3">
-                      @if ($course->bestseller == 1)
+                   
+                    @if ($course->bestseller == 1)
                     <h6 class="ribbon ribbon-lg mr-2 bg-3 text-white">Bestseller</h6>
                     @else
                     @endif 
-                   
+
+   @php
+       $reviewcount = App\Models\Review::where('course_id',$course->id)->where('status',1)->latest()->get();
+       $avarage = App\Models\Review::where('course_id',$course->id)->where('status',1)->avg('rating');
+
+   @endphp                 
+                    
                     <div class="rating-wrap d-flex flex-wrap align-items-center">
                         <div class="review-stars">
-                            <span class="rating-number">4.4</span>
+                            <span class="rating-number">{{ round($avarage,1) }}</span>
+                        
+                            @if ($avarage == 0)
+                            <span class="la la-star-o"></span>
+                            <span class="la la-star-o"></span>
+                            <span class="la la-star-o"></span>
+                            <span class="la la-star-o"></span>
+                            <span class="la la-star-o"></span>
+                            @elseif ($avarage == 1 || $avarage < 2)
+                            <span class="la la-star"></span>
+                            <span class="la la-star-o"></span>
+                            <span class="la la-star-o"></span>
+                            <span class="la la-star-o"></span>
+                            <span class="la la-star-o"></span>
+                            @elseif ($avarage == 2 || $avarage < 3)
+                            <span class="la la-star"></span>
+                            <span class="la la-star"></span>
+                            <span class="la la-star-o"></span>
+                            <span class="la la-star-o"></span>
+                            <span class="la la-star-o"></span>
+                            @elseif ($avarage == 3 || $avarage < 4)
+                            <span class="la la-star"></span>
+                            <span class="la la-star"></span>
+                            <span class="la la-star"></span>
+                            <span class="la la-star-o"></span>
+                            <span class="la la-star-o"></span>
+                            @elseif ($avarage == 4 || $avarage < 5)
                             <span class="la la-star"></span>
                             <span class="la la-star"></span>
                             <span class="la la-star"></span>
                             <span class="la la-star"></span>
                             <span class="la la-star-o"></span>
+                            @elseif ($avarage == 5 || $avarage < 5)
+                            <span class="la la-star"></span>
+                            <span class="la la-star"></span>
+                            <span class="la la-star"></span>
+                            <span class="la la-star"></span>
+                            <span class="la la-star"></span>
+                            @endif 
+                            
                         </div>
-                        <span class="rating-total pl-1">(20,230 ratings)</span>
-                        <span class="student-total pl-2">540,815 students</span>
+                        <span class="rating-total pl-1">({{ count($reviewcount) }} ratings)</span>
+    @php
+        $enrollmentCount = App\Models\Order::where('course_id',$course->id)->count();
+    @endphp
+
+                        <span class="student-total pl-2">{{ number_format($enrollmentCount) }} students</span>
                     </div>
                 </div><!-- end d-flex -->
-                    <p class="pt-2 pb-1">Created by <a href="teacher-detail.html" class="text-color hover-underline">{{ $course['user']['name'] }}</a></p>
+                <p class="pt-2 pb-1">Created by <a href="teacher-detail.html" class="text-color hover-underline">{{ $course['user']['name'] }}</a></p>
                 <div class="d-flex flex-wrap align-items-center">
                     <p class="pr-3 d-flex align-items-center">
                         <svg class="svg-icon-color-gray mr-1" width="16px" viewBox="0 0 24 24"><path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12zm-10 5h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg>
-                      Last updated {{ $course->created_at->format('M d Y') }}
+                        Last updated {{ $course->created_at->format('M d Y') }}
                     </p>
                     <p class="pr-3 d-flex align-items-center">
                         <svg class="svg-icon-color-gray mr-1" width="16px" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95a15.65 15.65 0 00-1.38-3.56A8.03 8.03 0 0118.92 8zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56A7.987 7.987 0 015.08 16zm2.95-8H5.08a7.987 7.987 0 014.33-3.56A15.65 15.65 0 008.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 01-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"></path></svg>
@@ -77,11 +124,10 @@
                    <div class="course-overview-card bg-gray p-4 rounded">
                        <h3 class="fs-24 font-weight-semi-bold pb-3">What you'll learn?</h3>
                        <ul class="generic-list-item overview-list-item">
-                         @foreach ($goals as $goal) 
-                               <li><i class="la la-check mr-1 text-black"></i>  {{ $goal->goal_name }} </li>
+                        @foreach ($goals as $goal) 
+   <li><i class="la la-check mr-1 text-black"></i>  {{ $goal->goal_name }} </li>
                         @endforeach  
-
-                           <li><i class="la la-check mr-1 text-black"></i> Obtain proficiency in Java 8 and Java 11.</li>
+                           
                        </ul>
                    </div><!-- end course-overview-card -->
                    <div class="course-overview-card bg-gray p-4 rounded">
@@ -90,14 +136,15 @@
                    <div class="course-overview-card">
                        <h3 class="fs-24 font-weight-semi-bold pb-3">Requirements</h3>
                        <ul class="generic-list-item generic-list-item-bullet fs-15">
-                         <li> {{ $course->prerequisites }} </li>
+                           <li> {{ $course->prerequisites }} </li>
+                           
                        </ul>
                    </div><!-- end course-overview-card -->
                     <div class="course-overview-card border border-gray p-4 rounded">
                        <h3 class="fs-20 font-weight-semi-bold">Top companies trust Aduca</h3>
                        <p class="fs-15 pb-1">Get your team access to Aduca's top 5,000+ courses</p>
                         <div class="pb-3">
-                           <img width="85" class="mr-3" src="{{ asset('frontend/images/sponsor-img.png') }}" alt="company logo">
+                            <img width="85" class="mr-3" src="{{ asset('frontend/images/sponsor-img.png') }}" alt="company logo">
                             <img width="80" class="mr-3" src="{{ asset('frontend/images/sponsor-img2.png') }}" alt="company logo">
                             <img width="80" class="mr-3" src="{{ asset('frontend/images/sponsor-img3.png') }}" alt="company logo">
                             <img width="70" class="mr-3" src="{{ asset('frontend/images/sponsor-img4.png') }}" alt="company logo">
@@ -106,39 +153,47 @@
                    </div><!-- end course-overview-card -->
                    <div class="course-overview-card">
                        <h3 class="fs-24 font-weight-semi-bold pb-3">Description</h3>
-                      
-                    <p class="fs-15 pb-2"> {!! $course->description !!} </p>
+                       <p class="fs-15 pb-2"> {!! $course->description !!} </p>
+
+
                        <div class="collapse" id="collapseMore">
-                           <h4 class="fs-20 font-weight-semi-bold py-2">Who this course is for:</h4>
+                          
+                        <h4 class="fs-20 font-weight-semi-bold py-2">Who this course is for:</h4>
                         <p class="fs-15 pb-2"> {{ $course->prerequisites }} </p>
+                          
+                            
                        </div>
                        <a class="collapse-btn collapse--btn fs-15" data-toggle="collapse" href="#collapseMore" role="button" aria-expanded="false" aria-controls="collapseMore">
                            <span class="collapse-btn-hide">Show more<i class="la la-angle-down ml-1 fs-14"></i></span>
                            <span class="collapse-btn-show">Show less<i class="la la-angle-up ml-1 fs-14"></i></span>
                        </a>
                    </div><!-- end course-overview-card -->
-                     @php
-                        $lecture = App\Models\CourseLecture::where('course_id',$course->id)->get();
-                    @endphp       
+
+    @php
+        $lecture = App\Models\CourseLecture::where('course_id',$course->id)->get();
+    @endphp               
                    <div class="course-overview-card">
                        <div class="curriculum-header d-flex align-items-center justify-content-between pb-4">
                            <h3 class="fs-24 font-weight-semi-bold">Course content</h3>
                            <div class="curriculum-duration fs-15">
-                            <span class="curriculum-total__text mr-2"><strong class="text-black font-weight-semi-bold">Total:</strong> {{ count($lecture) }} lectures</span>
-                               <span class="curriculum-total__hours"><strong class="text-black font-weight-semi-bold">Total hours:</strong> {{ $course->duration }}</span>   
-                             </div>
+                               <span class="curriculum-total__text mr-2"><strong class="text-black font-weight-semi-bold">Total:</strong> {{ count($lecture) }} lectures</span>
+                               <span class="curriculum-total__hours"><strong class="text-black font-weight-semi-bold">Total hours:</strong> {{ $course->duration }}</span>
+                           </div>
                        </div>
-                         @php
-                            $section = App\Models\CourseSection::where('course_id',$course->id)->orderBy('id','asc')->get();
-                         @endphp
+
+    @php
+        $section = App\Models\CourseSection::where('course_id',$course->id)->orderBy('id','asc')->get();
+    @endphp
+
                        <div class="curriculum-content">
                            <div id="accordion" class="generic-accordion">
-                                @foreach ($section as $sec)
+                               
+        @foreach ($section as $sec)
 
         @php
             $lecture = App\Models\CourseLecture::where('section_id',$sec->id)->get();
         @endphp
-
+                       
     <div class="card">
             <div class="card-header" id="heading{{ $sec->id }}">
                 <button class="btn btn-link d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#collapse{{ $sec->id }}" aria-expanded="true" aria-controls="collapse{{ $sec->id }}">
@@ -149,7 +204,7 @@
                         {{ count($lecture) }} lectures</span>
                 </button>
             </div><!-- end card-header -->
-           <div id="collapse{{ $sec->id }}" class="collapse " aria-labelledby="heading{{ $sec->id }}" data-parent="#accordion">
+            <div id="collapse{{ $sec->id }}" class="collapse " aria-labelledby="heading{{ $sec->id }}" data-parent="#accordion">
                 <div class="card-body">
                     <ul class="generic-list-item">
                        @foreach ($lecture as $lect) 
@@ -168,107 +223,24 @@
                 </div><!-- end card-body -->
             </div><!-- end collapse -->
         </div><!-- end card -->
-
+     
         @endforeach    
 
-                               <div class="card">
-                                   <div class="card-header" id="headingTwo">
-                                       <button class="btn btn-link collapsed d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                           <i class="la la-plus"></i>
-                                           <i class="la la-minus"></i>
-                                           Software tools setup
-                                           <span class="fs-15 text-gray font-weight-medium">6 lectures</span>
-                                       </button>
-                                   </div>
-                                   <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                                       <div class="card-body">
-                                           <ul class="generic-list-item">
-                                               <li>
-                                                   <div class="d-flex align-items-center justify-content-between">
-                                                       <span>
-                                                           <i class="la la-play-circle mr-1"></i>
-                                                           Biggest Tip to Succeed as a Java Programmer
-                                                       </span>
-                                                       <span>02:27</span>
-                                                   </div>
-                                               </li>
-                                               <li>
-                                                   <div class="d-flex align-items-center justify-content-between">
-                                                       <span>
-                                                           <i class="la la-file mr-1"></i>
-                                                           ** IMPORTANT ** - Configuring IntelliJ IDEA
-                                                       </span>
-                                                       <span>00:16</span>
-                                                   </div>
-                                               </li>
-                                               <li>
-                                                   <div class="d-flex align-items-center justify-content-between">
-                                                       <span>
-                                                           <i class="la la-play-circle mr-1"></i>
-                                                           Video Quality
-                                                       </span>
-                                                       <span>01:16</span>
-                                                   </div>
-                                               </li>
-                                               <li>
-                                                   <div class="d-flex align-items-center justify-content-between">
-                                                       <span>
-                                                           <i class="la la-play-circle mr-1"></i>
-                                                           Important Tip - Source Code
-                                                       </span>
-                                                       <span>02:07</span>
-                                                   </div>
-                                               </li>
-                                               <li>
-                                                   <div class="d-flex align-items-center justify-content-between">
-                                                       <span>
-                                                           <i class="la la-code mr-1"></i>
-                                                           Interface
-                                                       </span>
-                                                       <span>1 question</span>
-                                                   </div>
-                                               </li>
-                                           </ul>
-                                       </div><!-- end card-body -->
-                                   </div>
-                               </div><!-- end card -->
-                               <div class="card">
-                                   <div class="card-header" id="headingThree">
-                                       <button class="btn btn-link collapsed d-flex align-items-center justify-content-between" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                           <i class="la la-plus"></i>
-                                           <i class="la la-minus"></i>
-                                           Conclusion
-                                           <span class="fs-15 text-gray font-weight-medium">1 lectures</span>
-                                       </button>
-                                   </div>
-                                   <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                                       <div class="card-body">
-                                           <ul class="generic-list-item">
-                                               <li>
-                                                   <a href="#" class="d-flex align-items-center justify-content-between text-color" data-toggle="modal" data-target="#previewModal">
-                                                       <span>
-                                                           <i class="la la-play-circle mr-1"></i>
-                                                           Conclusion
-                                                           <span class="ribbon ml-2 fs-13">Watch</span>
-                                                       </span>
-                                                       <span>02:27</span>
-                                                   </a>
-                                               </li>
-                                           </ul>
-                                       </div><!-- end card-body -->
-                                   </div><!-- end collapse -->
-                               </div><!-- end card -->
+
+                               
                            </div><!-- end generic-accordion -->
                        </div><!-- end curriculum-content -->
                    </div><!-- end course-overview-card -->
-                 <div class="course-overview-card pt-4">
-                    <h3 class="fs-24 font-weight-semi-bold pb-4">About the instructor</h3>
-                        <div class="instructor-wrap">
-                        <div class="media media-card">
-                           <div class="instructor-img">
-                                <a href="teacher-detail.html" class="media-img d-block">
-                                    <img class="lazy" src="{{ (!empty($course->user->photo)) ? url('upload/instructor_images/'.$course->user->photo) : url('upload/no_image.jpg')}}" data-src="images/small-avatar-1.jpg" alt="Avatar image">
-                                </a>
+             
+
+    <div class="course-overview-card pt-4">
+        <h3 class="fs-24 font-weight-semi-bold pb-4">About the instructor</h3>
+        <div class="instructor-wrap">
+            <div class="media media-card">
+                <div class="instructor-img">
+                    <a href="teacher-detail.html" class="media-img d-block">
+                        <img class="lazy" src="{{ (!empty($course->user->photo)) ? url('upload/instructor_images/'.$course->user->photo) : url('upload/no_image.jpg')}}" data-src="images/small-avatar-1.jpg" alt="Avatar image">
+                    </a>
                     <ul class="generic-list-item pt-3">
                         <li><i class="la la-star mr-2 text-color-3"></i> 4.6 Instructor Rating</li>
                         <li><i class="la la-user mr-2 text-color-3"></i> 45,786 Students</li>
@@ -293,235 +265,265 @@
                 </div>
             </div>
         </div><!-- end instructor-wrap -->
-  
-                   </div><!-- end course-overview-card -->
+    </div><!-- end course-overview-card -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                    <div class="course-overview-card pt-4">
                        <h3 class="fs-24 font-weight-semi-bold pb-40px">Student feedback</h3>
                        <div class="feedback-wrap">
                            <div class="media media-card align-items-center">
                                <div class="review-rating-summary">
-                                    <span class="stats-average__count">4.6</span>
+                                    <span class="stats-average__count">{{ round($avarage,1) }}</span>
                                    <div class="rating-wrap pt-1">
                                        <div class="review-stars">
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star-half-alt"></span>
+                                        @if ($avarage == 0)
+                                        <span class="la la-star-o"></span>
+                                        <span class="la la-star-o"></span>
+                                        <span class="la la-star-o"></span>
+                                        <span class="la la-star-o"></span>
+                                        <span class="la la-star-o"></span>
+                                        @elseif ($avarage == 1 || $avarage < 2)
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star-o"></span>
+                                        <span class="la la-star-o"></span>
+                                        <span class="la la-star-o"></span>
+                                        <span class="la la-star-o"></span>
+                                        @elseif ($avarage == 2 || $avarage < 3)
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star-o"></span>
+                                        <span class="la la-star-o"></span>
+                                        <span class="la la-star-o"></span>
+                                        @elseif ($avarage == 3 || $avarage < 4)
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star-o"></span>
+                                        <span class="la la-star-o"></span>
+                                        @elseif ($avarage == 4 || $avarage < 5)
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star-o"></span>
+                                        @elseif ($avarage == 5 || $avarage < 5)
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star"></span>
+                                        <span class="la la-star"></span>
+                                        @endif 
                                        </div>
-                                       <span class="rating-total d-block">(2,533)</span>
+                                       <span class="rating-total d-block">({{ count($reviewcount) }})</span>
                                        <span>Course Rating</span>
                                    </div><!-- end rating-wrap -->
                                </div><!-- end review-rating-summary -->
-                               <div class="media-body">
-                                   <div class="review-bars d-flex align-items-center mb-2">
-                                       <div class="review-bars__text">5 stars</div>
-                                       <div class="review-bars__fill">
-                                           <div class="skillbar-box">
-                                               <div class="skillbar" data-percent="77%">
-                                                   <div class="skillbar-bar bg-3"></div>
-                                               </div> <!-- End Skill Bar -->
-                                           </div>
-                                       </div><!-- end review-bars__fill -->
-                                       <div class="review-bars__percent">77%</div>
-                                   </div><!-- end review-bars -->
-                                   <div class="review-bars d-flex align-items-center mb-2">
-                                       <div class="review-bars__text">4 stars</div>
-                                       <div class="review-bars__fill">
-                                           <div class="skillbar-box">
-                                               <div class="skillbar" data-percent="54%">
-                                                   <div class="skillbar-bar bg-3"></div>
-                                               </div> <!-- End Skill Bar -->
-                                           </div>
-                                       </div><!-- end review-bars__fill -->
-                                       <div class="review-bars__percent">54%</div>
-                                   </div><!-- end review-bars -->
-                                   <div class="review-bars d-flex align-items-center mb-2">
-                                       <div class="review-bars__text">3 stars</div>
-                                       <div class="review-bars__fill">
-                                           <div class="skillbar-box">
-                                               <div class="skillbar" data-percent="14%">
-                                                   <div class="skillbar-bar bg-3"></div>
-                                               </div> <!-- End Skill Bar -->
-                                           </div>
-                                       </div><!-- end review-bars__fill -->
-                                       <div class="review-bars__percent">14%</div>
-                                   </div><!-- end review-bars -->
-                                   <div class="review-bars d-flex align-items-center mb-2">
-                                       <div class="review-bars__text">2 stars</div>
-                                       <div class="review-bars__fill">
-                                           <div class="skillbar-box">
-                                               <div class="skillbar" data-percent="5%">
-                                                   <div class="skillbar-bar bg-3"></div>
-                                               </div> <!-- End Skill Bar -->
-                                           </div>
-                                       </div><!-- end review-bars__fill -->
-                                       <div class="review-bars__percent">5%</div>
-                                   </div><!-- end review-bars -->
-                                   <div class="review-bars d-flex align-items-center mb-2">
-                                       <div class="review-bars__text">1 stars</div>
-                                       <div class="review-bars__fill">
-                                           <div class="skillbar-box">
-                                               <div class="skillbar" data-percent="2%">
-                                                   <div class="skillbar-bar bg-3"></div>
-                                               </div> <!-- End Skill Bar -->
-                                           </div>
-                                       </div><!-- end review-bars__fill -->
-                                       <div class="review-bars__percent">2%</div>
-                                   </div><!-- end review-bars -->
-                               </div><!-- end media-body -->
+    <div class="media-body">
+
+        @php
+            $reviewcount = App\Models\Review::where('course_id',$course->id)
+                            ->where('status',1)
+                            ->select('rating', DB::raw('count(*) as count'))
+                            ->groupBy('rating')
+                            ->orderBy('rating','desc')
+                            ->get();
+            $totalReviews = $reviewcount->sum('count');
+
+            $percentages = [];
+
+            for ($i=5; $i >= 1 ; $i--) { 
+                $ratingCount = $reviewcount->where('rating',$i)->first();
+                $count =  $ratingCount ? $ratingCount->count : 0;
+                $percent = $totalReviews  > 0 ? ($count / $totalReviews) * 100 : 0;
+                $percentages[] = [
+                    'rating' => $i,
+                    'percent' => $percent,
+                    'count' => $count,
+               ];
+            } 
+        @endphp
+
+
+        @if (count($percentages) > 0) 
+        @foreach ($percentages as $ratingInfo)
+            
+        <div class="review-bars d-flex align-items-center mb-2">
+            <div class="review-bars__text">{{ $ratingInfo['rating'] }} stars</div>
+            <div class="review-bars__fill">
+                <div class="skillbar-box">
+   <div class="skillbar" data-percent="{{ $ratingInfo['percent'] }}%">
+                        <div class="skillbar-bar bg-3" style="width: {{ $ratingInfo['percent'] }}%;" ></div>
+                    </div> <!-- End Skill Bar -->
+                </div>
+            </div><!-- end review-bars__fill -->
+            <div class="review-bars__percent">{{ number_format($ratingInfo['percent'], 2) }}%</div>
+        </div><!-- end review-bars -->
+        
+        @endforeach
+        @else
+        <p>No Reviews Available</p>
+        @endif
+      
+    
+    </div><!-- end media-body -->
                            </div>
                        </div><!-- end feedback-wrap -->
                    </div><!-- end course-overview-card -->
                    <div class="course-overview-card pt-4">
                        <h3 class="fs-24 font-weight-semi-bold pb-4">Reviews</h3>
                        <div class="review-wrap">
-                           <div class="d-flex flex-wrap align-items-center pb-4">
-                               <form method="post" class="mr-3 flex-grow-1">
-                                   <div class="form-group">
-                                       <input class="form-control form--control pl-3" type="text" name="search" placeholder="Search reviews">
-                                       <span class="la la-search search-icon"></span>
-                                   </div>
-                               </form>
-                               <div class="select-container mb-3">
-                                   <select class="select-container-select">
-                                       <option value="all-rating">All ratings</option>
-                                       <option value="five-star">Five stars</option>
-                                       <option value="four-star">Four stars</option>
-                                       <option value="three-star">Three stars</option>
-                                       <option value="two-star">Two stars</option>
-                                       <option value="one-star">One star</option>
-                                   </select>
-                               </div>
-                           </div>
-                           <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
-                               <div class="media-img mr-4 rounded-full">
-                                   <img class="rounded-full lazy" src="images/img-loading.png" data-src="images/small-avatar-1.jpg" alt="User image">
-                               </div>
-                               <div class="media-body">
-                                   <div class="d-flex flex-wrap align-items-center justify-content-between pb-1">
-                                       <h5>Kavi arasan</h5>
-                                       <div class="review-stars">
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                       </div>
-                                   </div>
-                                   <span class="d-block lh-18 pb-2">a month ago</span>
-                                   <p class="pb-2">This is one of the best courses I have taken in Udemy. It is very complete, and it has made continue learning about Java and SQL databases as well.</p>
-                                   <div class="helpful-action">
-                                       <span class="d-block fs-13">Was this review helpful?</span>
-                                       <button class="btn">Yes</button>
-                                       <button class="btn">No</button>
-                                       <span class="btn-text fs-14 cursor-pointer pl-1" data-toggle="modal" data-target="#reportModal">Report</span>
-                                   </div>
-                               </div>
-                           </div><!-- end media -->
-                           <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
-                               <div class="media-img mr-4 rounded-full">
-                                   <img class="rounded-full lazy" src="images/img-loading.png" data-src="images/small-avatar-2.jpg" alt="User image">
-                               </div>
-                               <div class="media-body">
-                                   <div class="d-flex flex-wrap align-items-center justify-content-between pb-1">
-                                       <h5>Jitesh Shaw</h5>
-                                       <div class="review-stars">
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                       </div>
-                                   </div>
-                                   <span class="d-block lh-18 pb-2">1 months ago</span>
-                                   <p class="pb-2">This is one of the best courses I have taken in Udemy. It is very complete, and it has made continue learning about Java and SQL databases as well.</p>
-                                   <div class="helpful-action">
-                                       <span class="d-block fs-13">Was this review helpful?</span>
-                                       <button class="btn">Yes</button>
-                                       <button class="btn">No</button>
-                                       <span class="btn-text fs-14 cursor-pointer pl-1" data-toggle="modal" data-target="#reportModal">Report</span>
-                                   </div>
-                               </div>
-                           </div><!-- end media -->
-                           <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
-                               <div class="media-img mr-4 rounded-full">
-                                   <img class="rounded-full lazy" src="images/img-loading.png" data-src="images/small-avatar-3.jpg" alt="User image">
-                               </div>
-                               <div class="media-body">
-                                   <div class="d-flex flex-wrap align-items-center justify-content-between pb-1">
-                                       <h5>Miguel Sanches</h5>
-                                       <div class="review-stars">
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                           <span class="la la-star"></span>
-                                       </div>
-                                   </div>
-                                   <span class="d-block lh-18 pb-2">2 month ago</span>
-                                   <p class="pb-2">This is one of the best courses I have taken in Udemy. It is very complete, and it has made continue learning about Java and SQL databases as well.</p>
-                                   <div class="helpful-action">
-                                       <span class="d-block fs-13">Was this review helpful?</span>
-                                       <button class="btn">Yes</button>
-                                       <button class="btn">No</button>
-                                       <span class="btn-text fs-14 cursor-pointer pl-1" data-toggle="modal" data-target="#reportModal">Report</span>
-                                   </div>
-                               </div>
-                           </div><!-- end media -->
+              
+                        
+   @php
+       $reviews = App\Models\Review::where('course_id',$course->id)->where('status',1)->latest()->limit(5)->get();
+   @endphp
+
+    @foreach ($reviews as $item)
+    <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
+        <div class="media-img mr-4 rounded-full">
+            <img class="rounded-full lazy" src="{{ (!empty($item->user->photo)) ? url('upload/user_images/'.$item->user->photo) : url('upload/no_image.jpg')}}" data-src="images/small-avatar-1.jpg" alt="User image">
+        </div>
+        <div class="media-body">
+            <div class="d-flex flex-wrap align-items-center justify-content-between pb-1">
+                <h5>{{ $item->user->name }}</h5>
+                <div class="review-stars">
+
+                    @if($item->rating == NULL)
+                    <span class="la la-star-o"></span>
+                    <span class="la la-star-o"></span>
+                    <span class="la la-star-o"></span>
+                    <span class="la la-star-o"></span>
+                    <span class="la la-star-o"></span>
+                    @elseif ($item->rating == 1)
+                    <span class="la la-star"></span>
+                    <span class="la la-star-o"></span>
+                    <span class="la la-star-o"></span>
+                    <span class="la la-star-o"></span>
+                    <span class="la la-star-o"></span>
+                    @elseif ($item->rating == 2)
+                    <span class="la la-star"></span>
+                    <span class="la la-star"></span>
+                    <span class="la la-star-o"></span>
+                    <span class="la la-star-o"></span>
+                    <span class="la la-star-o"></span>
+                    @elseif ($item->rating == 3)
+                    <span class="la la-star"></span>
+                    <span class="la la-star"></span>
+                    <span class="la la-star"></span>
+                    <span class="la la-star-o"></span>
+                    <span class="la la-star-o"></span>
+
+                    @elseif ($item->rating == 4)
+                    <span class="la la-star"></span>
+                    <span class="la la-star"></span>
+                    <span class="la la-star"></span>
+                    <span class="la la-star"></span>
+                    <span class="la la-star-o"></span>
+                    @elseif ($item->rating == 5)
+                    <span class="la la-star"></span>
+                    <span class="la la-star"></span>
+                    <span class="la la-star"></span>
+                    <span class="la la-star"></span>
+                    <span class="la la-star"></span>
+                    @endif
+
+                </div>
+            </div>
+            <span class="d-block lh-18 pb-2">{{ Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</span>
+            <p class="pb-2">{{ $item->comment }}</p>
+            <div class="helpful-action">
+                <span class="d-block fs-13">Was this review helpful?</span>
+                <button class="btn">Yes</button>
+                <button class="btn">No</button>
+                <span class="btn-text fs-14 cursor-pointer pl-1" data-toggle="modal" data-target="#reportModal">Report</span>
+            </div>
+        </div>
+    </div><!-- end media --> 
+        
+    @endforeach
+
+                     
                        </div><!-- end review-wrap -->
                        <div class="see-more-review-btn text-center">
                            <button type="button" class="btn theme-btn theme-btn-transparent">Load more reviews</button>
                        </div>
                    </div><!-- end course-overview-card -->
+                  
+
+
+
+
+
+
+
+
+
+
+
+
+
+               @guest
+<p><b> For Add Course Review. You need to login first <a href="{{ route('login') }}"> Login Here</a> </b> </p>
+               @else 
+                  
                    <div class="course-overview-card pt-4">
                        <h3 class="fs-24 font-weight-semi-bold pb-4">Add a Review</h3>
-                       <div class="leave-rating-wrap pb-4">
-                           <div class="leave-rating leave--rating">
-                               <input type="radio" name='rate' id="star5"/>
-                               <label for="star5"></label>
-                               <input type="radio" name='rate' id="star4"/>
-                               <label for="star4"></label>
-                               <input type="radio" name='rate' id="star3"/>
-                               <label for="star3"></label>
-                               <input type="radio" name='rate' id="star2"/>
-                               <label for="star2"></label>
-                               <input type="radio" name='rate' id="star1"/>
-                               <label for="star1"></label>
-                           </div><!-- end leave-rating -->
-                       </div>
-                       <form method="post" class="row">
-                           <div class="input-box col-lg-6">
-                               <label class="label-text">Name</label>
-                               <div class="form-group">
-                                   <input class="form-control form--control" type="text" name="name" placeholder="Your Name">
-                                   <span class="la la-user input-icon"></span>
-                               </div>
-                           </div><!-- end input-box -->
-                           <div class="input-box col-lg-6">
-                               <label class="label-text">Email</label>
-                               <div class="form-group">
-                                   <input class="form-control form--control" type="email" name="email" placeholder="Email Address">
-                                   <span class="la la-envelope input-icon"></span>
-                               </div>
-                           </div><!-- end input-box -->
-                           <div class="input-box col-lg-12">
-                               <label class="label-text">Message</label>
-                               <div class="form-group">
-                                   <textarea class="form-control form--control pl-3" name="message" placeholder="Write Message" rows="5"></textarea>
-                               </div>
-                           </div><!-- end input-box -->
-                           <div class="btn-box col-lg-12">
-                               <div class="custom-control custom-checkbox mb-3 fs-15">
-                                   <input type="checkbox" class="custom-control-input" id="saveCheckbox" required>
-                                   <label class="custom-control-label custom--control-label" for="saveCheckbox">
-                                       Save my name, and email in this browser for the next time I comment.
-                                   </label>
-                               </div><!-- end custom-control -->
-                               <button class="btn theme-btn" type="submit">Submit Review</button>
-                           </div><!-- end btn-box -->
-                       </form>
+                       
+        <form method="post" action="{{ route('store.review') }}" class="row">
+            @csrf
+
+
+        <div class="leave-rating-wrap pb-4">
+            <div class="leave-rating leave--rating">
+                <input type="radio" name='rate' id="star5" value="5" />
+                <label for="star5"></label>
+                <input type="radio" name='rate' id="star4" value="4"/>
+                <label for="star4"></label>
+                <input type="radio" name='rate' id="star3" value="3"/>
+                <label for="star3"></label>
+                <input type="radio" name='rate' id="star2" value="2"/>
+                <label for="star2"></label>
+                <input type="radio" name='rate' id="star1" value="1"/>
+                <label for="star1"></label>
+            </div><!-- end leave-rating -->
+        </div>
+        
+            <input type="hidden" name="course_id" value="{{ $course->id }}">
+            <input type="hidden" name="instructor_id" value="{{ $course->instructor_id }}">
+            
+            <div class="input-box col-lg-12">
+                <label class="label-text">Message</label>
+                <div class="form-group">
+                    <textarea class="form-control form--control pl-3" name="comment" placeholder="Write Message" rows="5"></textarea>
+                </div>
+            </div><!-- end input-box -->
+            <div class="btn-box col-lg-12">
+                
+                <button class="btn theme-btn" type="submit">Submit Review</button>
+            </div><!-- end btn-box -->
+        </form>
                    </div><!-- end course-overview-card -->
+
+                   @endguest   
+
+
+
                </div><!-- end course-details-content-wrap -->
            </div><!-- end col-lg-8 -->
             <div class="col-lg-4">
@@ -548,29 +550,34 @@
                                     </div>
                                 </a>
                             </div><!-- end preview-course-video -->
-                             @php
-                                    $amount = $course->selling_price - $course->discount_price;
-                                    $discount = ($amount/$course->selling_price) * 100;
-                             @endphp  
+                          
+    @php
+    $amount = $course->selling_price - $course->discount_price;
+    $discount = ($amount/$course->selling_price) * 100;
+   @endphp            
+                          
                             <div class="preview-course-feature-content pt-40px">
-                              <p class="d-flex align-items-center pb-2">
-                                @if ($course->discount_price == NULL)
-                                <span class="fs-35 font-weight-semi-bold text-black">${{ $course->selling_price }}</span>
-                                @else
-                                <span class="fs-35 font-weight-semi-bold text-black">${{ $course->discount_price }}</span>
-                                <span class="before-price mx-1">${{ $course->selling_price }}</span>
-                                @endif
-                                <span class="price-discount">{{ round($discount) }}% off</span>
-                             </p>
+        
+         <p class="d-flex align-items-center pb-2">
+            @if ($course->discount_price == NULL)
+            <span class="fs-35 font-weight-semi-bold text-black">${{ $course->selling_price }}</span>
+            @else
+            <span class="fs-35 font-weight-semi-bold text-black">${{ $course->discount_price }}</span>
+            <span class="before-price mx-1">${{ $course->selling_price }}</span>
+            @endif
+            
+            
+            <span class="price-discount">{{ round($discount) }}% off</span>
+        </p>
                                 <p class="preview-price-discount-text pb-35px">
                                     <span class="text-color-3">4 days</span> left at this price!
                                 </p>
-                                <div class="buy-course-btn-box">
-                                   <div class="buy-course-btn-box">
-                                        <button type="submit" class="btn theme-btn w-100 mb-2" onclick="addToCart({{ $course->id }}, '{{ $course->course_name }}', '{{ $course->instructor_id }}', '{{ $course->course_name_slug }}' )" ><i class="la la-shopping-cart fs-18 mr-1"></i> Add to cart</button>
-                                        <button type="button" class="btn theme-btn w-100 theme-btn-white mb-2"  onclick="buyCourse({{ $course->id }}, '{{ $course->course_name }}', '{{ $course->instructor_id }}', '{{ $course->course_name_slug }}' )"><i class="la la-shopping-bag mr-1"></i> Buy this course</button>
-                                    <div class="input-group mb-2" id="couponField">
+<div class="buy-course-btn-box">
+    <button type="submit" class="btn theme-btn w-100 mb-2" onclick="addToCart({{ $course->id }}, '{{ $course->course_name }}', '{{ $course->instructor_id }}', '{{ $course->course_name_slug }}' )" ><i class="la la-shopping-cart fs-18 mr-1"></i> Add to cart</button>
 
+    <button type="button" class="btn theme-btn w-100 theme-btn-white mb-2"  onclick="buyCourse({{ $course->id }}, '{{ $course->course_name }}', '{{ $course->instructor_id }}', '{{ $course->course_name_slug }}' )"><i class="la la-shopping-bag mr-1"></i> Buy this course</button>
+
+    <div class="input-group mb-2" id="couponField">
         <input class="form-control form--control pl-3" type="text"  id="coupon_name" placeholder="Coupon code">
         <div class="input-group-append">
             <input type="hidden" id="course_id" name="course_id" value="{{ $course->id }}">
@@ -578,19 +585,21 @@
       <a type="submit" onclick="applyInsCoupon()" class="btn theme-btn">Apply Code</a>      
         </div>
     </div>  
-                                </div>
+
+
+</div>
                                 <p class="fs-14 text-center pb-4">30-Day Money-Back Guarantee</p>
                                 <div class="preview-course-incentives">
                                     <h3 class="card-title fs-18 pb-2">This course includes</h3>
-                                        <ul class="generic-list-item pb-3">
-                                            <li><i class="la la-play-circle-o mr-2 text-color"></i>{{ $course->duration }} hours on-demand video</li>
-                                            <li><i class="la la-file mr-2 text-color"></i>{{ $course->resources }} articles</li>
-                                            <li><i class="la la-file-text mr-2 text-color"></i>12 downloadable resources</li>
-                                            <li><i class="la la-code mr-2 text-color"></i>51 coding exercises</li>
-                                            <li><i class="la la-key mr-2 text-color"></i>Full lifetime access</li>
-                                            <li><i class="la la-television mr-2 text-color"></i>Access on mobile and TV</li>
-                                            <li><i class="la la-certificate mr-2 text-color"></i>Certificate of Completion</li>
-                                        </ul>
+            <ul class="generic-list-item pb-3">
+                <li><i class="la la-play-circle-o mr-2 text-color"></i>{{ $course->duration }} hours on-demand video</li>
+                <li><i class="la la-file mr-2 text-color"></i>{{ $course->resources }} articles</li>
+                <li><i class="la la-file-text mr-2 text-color"></i>12 downloadable resources</li>
+                <li><i class="la la-code mr-2 text-color"></i>51 coding exercises</li>
+                <li><i class="la la-key mr-2 text-color"></i>Full lifetime access</li>
+                <li><i class="la la-television mr-2 text-color"></i>Access on mobile and TV</li>
+                <li><i class="la la-certificate mr-2 text-color"></i>Certificate of Completion</li>
+            </ul>
                                     <div class="section-block"></div>
                                     <div class="buy-for-team-container pt-4">
                                         <h3 class="fs-18 font-weight-semi-bold pb-2">Training 5 or more people?</h3>
@@ -605,18 +614,17 @@
                         <div class="card-body">
                             <h3 class="card-title fs-18 pb-2">Course Features</h3>
                             <div class="divider"><span></span></div>
-                            <ul class="generic-list-item generic-list-item-flash">
-                                
-                                
-                                <li class="d-flex align-items-center justify-content-between"><span><i class="la la-clock mr-2 text-color"></i>Duration</span> {{ $course->duration }} hours</li>
-                                        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-file-text-o mr-2 text-color"></i>Resources</span> {{ $course->resources }}</li>
-                                        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-bolt mr-2 text-color"></i>Quizzes</span> 26</li>
-                                        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-eye mr-2 text-color"></i>Preview Lessons</span> 4</li>
-                                        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-language mr-2 text-color"></i>Language</span> English</li>
-                                        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-lightbulb mr-2 text-color"></i>Skill level</span> {{ $course->label }}</li>
-                                        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-users mr-2 text-color"></i>Students</span> 30,506</li>
-                                        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-certificate mr-2 text-color"></i>Certificate</span> {{ $course->certificate }}</li>
-                            </ul>
+    <ul class="generic-list-item generic-list-item-flash">
+        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-clock mr-2 text-color"></i>Duration</span> {{ $course->duration }} hours</li>
+        
+        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-file-text-o mr-2 text-color"></i>Resources</span> {{ $course->resources }}</li>
+        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-bolt mr-2 text-color"></i>Quizzes</span> 26</li>
+        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-eye mr-2 text-color"></i>Preview Lessons</span> 4</li>
+        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-language mr-2 text-color"></i>Language</span> English</li>
+        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-lightbulb mr-2 text-color"></i>Skill level</span> {{ $course->label }}</li>
+        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-users mr-2 text-color"></i>Students</span> 30,506</li>
+        <li class="d-flex align-items-center justify-content-between"><span><i class="la la-certificate mr-2 text-color"></i>Certificate</span> {{ $course->certificate }}</li>
+    </ul>
                         </div>
                     </div><!-- end card -->
                     <div class="card card-item">
@@ -624,9 +632,10 @@
                             <h3 class="card-title fs-18 pb-2">Course Categories</h3>
                             <div class="divider"><span></span></div>
                             <ul class="generic-list-item">
-                                @foreach ($categories as $cat)
-                                  <li><a href="{{ url('category/'.$cat->id.'/'.$cat->category_slug) }}">{{ $cat->category_name }}</a></li> 
+                               @foreach ($categories as $cat)
+                                <li><a href="{{ url('category/'.$cat->id.'/'.$cat->category_slug) }}">{{ $cat->category_name }}</a></li> 
                                @endforeach 
+                                
                             </ul>
                         </div>
                     </div><!-- end card -->
@@ -634,27 +643,30 @@
                         <div class="card-body">
                             <h3 class="card-title fs-18 pb-2">Related Courses</h3>
                             <div class="divider"><span></span></div>
-                              @foreach ($relatedCourses as $related)
-                                    <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
-                                        <a href="course-details.html" class="media-img">
-                                            <img class="mr-3 lazy" src="{{ asset($related->course_image) }}" data-src="{{ asset($related->course_image) }}" alt="Related course image">
-                                        </a>
-                                        <div class="media-body">
-                                            <h5 class="fs-15"><a href="course-details.html"> {{ $related->course_name}}</a></h5>
-                                            <span class="d-block lh-18 py-1 fs-14">{{ $related['user']['name'] }}</span>
+                            
+        @foreach ($relatedCourses as $related)
+        <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
+            <a href="course-details.html" class="media-img">
+                <img class="mr-3 lazy" src="{{ asset($related->course_image) }}" data-src="{{ asset($related->course_image) }}" alt="Related course image">
+            </a>
+            <div class="media-body">
+                <h5 class="fs-15"><a href="course-details.html"> {{ $related->course_name}}</a></h5>
+                <span class="d-block lh-18 py-1 fs-14">{{ $related['user']['name'] }}</span>
 
-                                            @if ($related->discount_price == NULL)
-                                            <p class="text-black font-weight-semi-bold lh-18 fs-15">${{ $related->selling_price }}  </p>
-                                            @else
-                                            <p class="text-black font-weight-semi-bold lh-18 fs-15">${{ $related->discount_price }} <span class="before-price fs-14">${{ $related->selling_price }}</span></p>
-                                            @endif
-
-                                        </div>
-                                    </div><!-- end media -->
-
-
-                                @endforeach
+                @if ($related->discount_price == NULL)
+                <p class="text-black font-weight-semi-bold lh-18 fs-15">${{ $related->selling_price }}  </p>
+                @else
+                <p class="text-black font-weight-semi-bold lh-18 fs-15">${{ $related->discount_price }} <span class="before-price fs-14">${{ $related->selling_price }}</span></p>
+                @endif
+               
+            </div>
+        </div><!-- end media -->
+        
+            
+        @endforeach
                          
+
+
                             <div class="view-all-course-btn-box">
                                 <a href="course-grid.html" class="btn theme-btn w-100">View All Courses <i class="la la-arrow-right icon ml-1"></i></a>
                             </div>
@@ -676,35 +688,39 @@
 <section class="related-course-area bg-gray pt-60px pb-60px">
     <div class="container">
         <div class="related-course-wrap">
-           <h3 class="fs-28 font-weight-semi-bold pb-35px">More Courses by <a href="teacher-detail.html" class="text-color hover-underline">{{ $course['user']['name'] }}</a></h3>
+            <h3 class="fs-28 font-weight-semi-bold pb-35px">More Courses by <a href="teacher-detail.html" class="text-color hover-underline">{{ $course['user']['name'] }}</a></h3>
             <div class="view-more-carousel-2 owl-action-styled">
-             @foreach ($instructorCourses  as $inscourse)
+                
+                @foreach ($instructorCourses  as $inscourse)
 
                 @php
                 $amount = $inscourse->selling_price - $inscourse->discount_price;
                 $discount = ($amount/$inscourse->selling_price) * 100;
             @endphp
+
+
                 <div class="card card-item">
                     <div class="card-image">
-                      <a href="{{ url('course/details/'.$inscourse->id.'/'.$inscourse->course_name_slug) }}" class="d-block">
+                        <a href="{{ url('course/details/'.$inscourse->id.'/'.$inscourse->course_name_slug) }}" class="d-block">
                             <img class="card-img-top" src="{{ asset($inscourse->course_image) }}" alt="Card image cap">
                         </a>
                         <div class="course-badge-labels">
-                           @if ($inscourse->bestseller == 1)
+
+                            @if ($inscourse->bestseller == 1)
                             <div class="course-badge">Bestseller</div>
                             @else
                             @endif
-                           
+
                             @if ($inscourse->discount_price == NULL)
                             <div class="course-badge blue">New</div>
                             @else
                             <div class="course-badge blue">{{ round($discount) }}%</div>
                             @endif
-                            <div class="course-badge blue">-39%</div>
+
                         </div>
                     </div><!-- end card-image -->
                     <div class="card-body">
-                       <h6 class="ribbon ribbon-blue-bg fs-14 mb-3">{{ $inscourse->label }}</h6>
+                        <h6 class="ribbon ribbon-blue-bg fs-14 mb-3">{{ $inscourse->label }}</h6>
                         <h5 class="card-title"><a href="{{ url('course/details/'.$inscourse->id.'/'.$inscourse->course_name_slug) }}">{{ $inscourse->course_name }}</a></h5>
                         <p class="card-text"><a href="teacher-detail.html">{{ $inscourse['user']['name'] }}</a></p>
                         <div class="rating-wrap d-flex align-items-center py-2">
@@ -719,16 +735,23 @@
                             <span class="rating-total pl-1">(20,230)</span>
                         </div><!-- end rating-wrap -->
                         <div class="d-flex justify-content-between align-items-center">
-                            @if ($inscourse->discount_price == NULL)
-                                    <p class="card-price text-black font-weight-bold">${{ $inscourse->selling_price }}  </p>
-                                    @else
-                                    <p class="card-price text-black font-weight-bold">${{ $inscourse->discount_price }} <span class="before-price font-weight-medium">${{ $inscourse->selling_price }}</span></p> 
-                            @endif
+
+                    @if ($inscourse->discount_price == NULL)
+                    <p class="card-price text-black font-weight-bold">${{ $inscourse->selling_price }}  </p>
+                    @else
+                    <p class="card-price text-black font-weight-bold">${{ $inscourse->discount_price }} <span class="before-price font-weight-medium">${{ $inscourse->selling_price }}</span></p> 
+                    @endif
+
+
                             <div class="icon-element icon-element-sm shadow-sm cursor-pointer" title="Add to Wishlist"><i class="la la-heart-o"></i></div>
                         </div>
                     </div><!-- end card-body -->
-                </div><!-- end card -->
-               @endforeach
+                </div><!-- end card --> 
+                @endforeach
+
+            
+
+
             </div><!-- end view-more-carousel -->
         </div><!-- end related-course-wrap -->
     </div><!-- end container -->
@@ -789,7 +812,7 @@
                 <div class="copy-to-clipboard">
                     <span class="success-message">Copied!</span>
                     <div class="input-group">
-                      <input type="text" class="form-control form--control copy-input pl-3" value="http://127.0.0.1:8000/{{ Request::path() }} ">
+                        <input type="text" class="form-control form--control copy-input pl-3" value="http://127.0.0.1:8000/{{ Request::path() }} ">
                         <div class="input-group-append">
                             <button class="btn theme-btn theme-btn-sm copy-btn shadow-none"><i class="la la-copy mr-1"></i> Copy</button>
                         </div>
@@ -814,19 +837,17 @@
             <div class="modal-header border-bottom-gray">
                 <div class="pr-2">
                     <p class="pb-2 font-weight-semi-bold">Course Preview</p>
-                      <h5 class="modal-title fs-19 font-weight-semi-bold lh-24" id="previewModalTitle">{{ $course->course_name }}</h5>
+                    <h5 class="modal-title fs-19 font-weight-semi-bold lh-24" id="previewModalTitle">{{ $course->course_name }}</h5>
                 </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" class="la la-times"></span>
                 </button>
             </div><!-- end modal-header -->
             <div class="modal-body">
-               <video controls crossorigin playsinline poster="{{ asset($course->course_image) }}" id="player">
+                <video controls crossorigin playsinline poster="{{ asset($course->course_image) }}" id="player">
                     <!-- Video files -->
-                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4"/>
-                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4" type="video/mp4"/>
-                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4" type="video/mp4"/>
                     <source src="{{ asset($course->video) }}" type="video/mp4"/>
+                      
                 </video>
             </div><!-- end modal-body -->
         </div><!-- end modal-content -->

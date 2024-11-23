@@ -9,7 +9,7 @@
                 <ol class="breadcrumb mb-0 p-0">
                     <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">All User</li>
+                    <li class="breadcrumb-item active" aria-current="page">All Instrutor</li>
                 </ol>
             </nav>
         </div>
@@ -40,20 +40,18 @@
                         @foreach ($users as $key=> $item) 
                         <tr>
                             <td>{{ $key+1 }}</td>
-                            <td> <img src="{{ (!empty($item->photo)) ? url('upload/user_images/'.$item->photo) : url('upload/no_image.jpg')}}" alt="" style="width: 70px; height:40px;"> </td>
+                            <td> <img src="{{ (!empty($item->photo)) ? url('upload/instructor_images/'.$item->photo) : url('upload/no_image.jpg')}}" alt="" style="width: 70px; height:40px;"> </td>
                             <td>{{ $item->name }}</td> 
                             <td>{{ $item->email }}</td> 
                             <td>{{ $item->phone }}</td> 
                             <td>
-        @if ($item->UserOnline())
-        <span class="badge badge-pill bg-success">Active Now</span>
-        @else 
-        <span class="badge badge-pill bg-danger">{{ Carbon\Carbon::parse($item->last_seen)->diffForHumans() }} </span>  
-             
-        @endif    
-                            </td> 
-
-                            
+                                @if ($item->UserOnline())
+                                <span class="badge badge-pill bg-success">Active Now</span>
+                                @else 
+                                <span class="badge badge-pill bg-danger">{{ Carbon\Carbon::parse($item->last_seen)->diffForHumans() }} </span>  
+                                     
+                                @endif    
+                                                    </td>                          
                         </tr>
                         @endforeach
                          
@@ -62,14 +60,6 @@
                 </table>
             </div>
         </div>
-    </div>
-
-
-   
-   
+    </div>  
 </div>
- 
-
-
-
 @endsection

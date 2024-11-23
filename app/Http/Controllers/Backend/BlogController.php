@@ -187,6 +187,7 @@ public function DeleteBlogPost($id){
             'alert-type' => 'success'
         );
         return redirect()->back()->with($notification);
+    
 
 }// End Method 
 } 

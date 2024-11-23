@@ -13,7 +13,6 @@
                     <li class="breadcrumb-item active" aria-current="page">Add Blog Post</li>
                 </ol>
             </nav>
-        
         </div>
          
     </div>

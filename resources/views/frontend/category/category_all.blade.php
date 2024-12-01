@@ -1,5 +1,9 @@
 @extends('frontend.master')
 @section('home')
+@section('title')
+
+{{ $category->category_name }} | Career hive
+@endsection
 <!-- ================================
     START BREADCRUMB AREA
 ================================= -->

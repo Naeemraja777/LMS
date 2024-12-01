@@ -156,6 +156,12 @@ Route::controller(SettingController::class)->group(function(){
 
 });
 
+// Site Setting All Route 
+Route::controller(SettingController::class)->group(function(){  
+        Route::get('/site/setting','SiteSetting')->name('site.setting'); 
+        Route::post('/update/site','UpdateSite')->name('update.site'); 
+    });
+
 
 // Admin All Order Route 
 Route::controller(OrderController::class)->group(function(){

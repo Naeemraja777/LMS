@@ -1,5 +1,8 @@
 @extends('frontend.master')
 @section('home')
+@section('title')
+{{ $blog->post_title  }} | Career hive
+@endsection
 
 <!-- ================================
     START BREADCRUMB AREA

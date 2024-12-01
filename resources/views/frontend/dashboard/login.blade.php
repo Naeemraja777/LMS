@@ -1,6 +1,12 @@
 @extends('frontend.master')
 @section('home')
 
+
+@section('title')
+4	+
+Login Page | Career hive
+@endsection
+
 <!-- ================================
     START BREADCRUMB AREA
 ================================= -->

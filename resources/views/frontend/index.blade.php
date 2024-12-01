@@ -1,6 +1,9 @@
 @extends('frontend.master')
 @section('home')
 
+@section('title')
+Career hive
+@endsection
 
 
 @include('frontend.home.hero-area')

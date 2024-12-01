@@ -1,6 +1,9 @@
 
 @extends('frontend.master')
 @section('home')
+@section('title')
+Register Page | Careerhive
+@endsection
 
 
 <section class="breadcrumb-area section-padding img-bg-2">

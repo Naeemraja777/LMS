@@ -1079,6 +1079,15 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'spatie/laravel-permission' => array(
+            'pretty_version' => '6.10.1',
+            'version' => '6.10.1.0',
+            'reference' => '8bb69d6d67387f7a00d93a2f5fab98860f06e704',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/laravel-permission',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'stripe/stripe-php' => array(
             'pretty_version' => 'v16.2.0',
             'version' => '16.2.0.0',

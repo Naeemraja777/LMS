@@ -3,7 +3,7 @@
 
 
 @section('title')
-4	+
+
 Login Page | Career hive
 @endsection
 

@@ -18,6 +18,7 @@ use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Controllers\Backend\ReviewController;
 use App\Http\Controllers\Backend\ActiveUserController;
 use App\Http\Controllers\Backend\BlogController;
+use App\Http\Controllers\Backend\RoleController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -205,6 +206,17 @@ Route::controller(BlogController::class)->group(function(){
     Route::post('/update/blog/post','UpdateBlogPost')->name('update.blog.post');
     Route::get('/delete/post/{id}','DeleteBlogPost')->name('delete.post');
       
+});
+// Permission All Route 
+Route::controller(RoleController::class)->group(function(){
+    Route::get('/all/permission','AllPermission')->name('all.permission'); 
+    Route::get('/add/permission','AddPermission')->name('add.permission');
+    Route::post('/store/permission','StorePermission')->name('store.permission'); 
+    Route::get('/edit/permission/{id}','EditPermission')->name('edit.permission');
+    Route::post('/update/permission','UpdatePermission')->name('update.permission');
+    Route::get('/delete/permission/{id}','DeletePermission')->name('delete.permission');
+  
+    
 });
 
 

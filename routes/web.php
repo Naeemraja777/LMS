@@ -100,7 +100,7 @@ Route::post('/admin/password/update', [AdminController::class, 'AdminPasswordUpd
 // Category All Route 
 Route::controller(CategoryController::class)->group(function(){
     Route::get('/all/category','AllCategory')->name('all.category');
-    Route::get('/add/category','AddCategory')->name('add.category');
+    Route::get('/all/category','AllCategory')->name('all.category')->middleware('permission:category.all');;
     Route::post('/store/category','StoreCategory')->name('store.category');
     Route::get('/edit/category/{id}','EditCategory')->name('edit.category');
     Route::post('/update/category','UpdateCategory')->name('update.category');
@@ -112,7 +112,7 @@ Route::controller(CategoryController::class)->group(function(){
 // SubCategory All Route 
 Route::controller(CategoryController::class)->group(function(){
     Route::get('/all/subcategory','AllSubCategory')->name('all.subcategory');
-    Route::get('/add/subcategory','AddSubCategory')->name('add.subcategory');
+    Route::get('/all/subcategory','AllSubCategory')->name('all.subcategory')->middleware('permission:subcategory.all');
     Route::post('/store/subcategory','StoreSubCategory')->name('store.subcategory');
     Route::get('/edit/subcategory/{id}','EditSubCategory')->name('edit.subcategory');
     Route::post('/update/subcategory','UpdateSubCategory')->name('update.subcategory');
@@ -238,7 +238,15 @@ Route::controller(RoleController::class)->group(function(){
     Route::post('/admin/roles/update/{id}','AdminUpdateRoles')->name('admin.roles.update');
     Route::get('/admin/delete/roles/{id}','AdminDeleteRoles')->name('admin.delete.roles');
 });
-
+// Admin User All Route 
+Route::controller(AdminController::class)->group(function(){
+    Route::get('/all/admin','AllAdmin')->name('all.admin');  
+    Route::get('/add/admin','AddAdmin')->name('add.admin');
+    Route::post('/store/admin','StoreAdmin')->name('store.admin');
+    Route::get('/edit/admin/{id}','EditAdmin')->name('edit.admin');
+    Route::post('/update/admin/{id}','UpdateAdmin')->name('update.admin'); 
+    Route::get('/delete/admin/{id}','DeleteAdmin')->name('delete.admin'); 
+});
 }); // End Admin Group Middleware 
 
 

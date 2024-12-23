@@ -1,6 +1,10 @@
 @extends('frontend.master')
 @section('home')
 
+@section('title')
+{{ $course->course_name }} | Easy Learning
+@endsection
+
 
 <!-- ================================
     START BREADCRUMB AREA
@@ -393,7 +397,7 @@
    @php
        $reviews = App\Models\Review::where('course_id',$course->id)->where('status',1)->latest()->limit(5)->get();
    @endphp
-
+ 
     @foreach ($reviews as $item)
     <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
         <div class="media-img mr-4 rounded-full">

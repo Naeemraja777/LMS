@@ -126,20 +126,7 @@
         </li>
 
 
-        <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
-                </div>
-                <div class="menu-title">Manage Report</div>
-            </a>
-            <ul>
-                <li> <a href="{{ route('report.view') }}"><i class='bx bx-radio-circle'></i>Report View </a>
-                </li>
-               
-               
-               
-            </ul>
-        </li>
+       
 
         <li>
             <a class="has-arrow" href="javascript:;">

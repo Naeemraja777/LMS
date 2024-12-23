@@ -35,7 +35,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                       
+                        
                         @foreach ($roles as $key=> $item) 
                         <tr>
                             <td>{{ $key+1 }}</td>
@@ -47,8 +47,8 @@
                             
                             </td>
                             <td>
-                                    <a href="{{ route('admin.edit.roles',$item->id) }}" class="btn btn-info px-5">Edit </a>      
-                                    <a href="{{ route('admin.delete.roles',$item->id) }}" class="btn btn-danger px-5" id="delete">Delete </a>                        
+       <a href="{{ route('admin.edit.roles',$item->id) }}" class="btn btn-info px-5">Edit </a>   
+       <a href="{{ route('admin.delete.roles',$item->id) }}" class="btn btn-danger px-5" id="delete">Delete </a>                    
                             </td>
                         </tr>
                         @endforeach
@@ -58,6 +58,6 @@
                 </table>
             </div>
         </div>
-    </div>  
+    </div>
 </div>
 @endsection

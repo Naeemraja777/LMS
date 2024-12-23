@@ -19,6 +19,7 @@ use App\Http\Controllers\Backend\ReviewController;
 use App\Http\Controllers\Backend\ActiveUserController;
 use App\Http\Controllers\Backend\BlogController;
 use App\Http\Controllers\Backend\RoleController;
+use App\Http\Controllers\Backend\ChatController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -49,6 +50,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/user/change/password', [UserController::class, 'UserChangePassword'])->name('user.change.password');
     Route::post('/user/password/update', [UserController::class, 'UserPasswordUpdate'])->name('user.password.update');
+    Route::get('/live/chat', [UserController::class, 'LiveChat'])->name('live.chat');
 
 
     // User Wishlist All Route 
@@ -387,4 +389,9 @@ Route::get('/blog', [BlogController::class, 'BlogList'])->name('blog');
 Route::post('/mark-notification-as-read/{notification}', [CartController::class, 'MarkAsRead']);
 
 ///// End Route Accessable for All 
+// Chat Post Request Route
+Route::post('/send-message', [ChatController::class, 'SendMessage']);
+Route::get('/user-all', [ChatController::class, 'GetAllUsers']);
 
+Route::get('/user-message/{id}', [ChatController::class, 'UserMsgById']);
+Route::get('/instructor/live/chat', [ChatController::class, 'LiveChat'])->name('instructor.live.chat');
